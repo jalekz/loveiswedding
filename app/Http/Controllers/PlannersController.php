@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Planner;
 
 class PlannersController extends Controller
 {
@@ -13,7 +14,8 @@ class PlannersController extends Controller
      */
     public function index()
     {
-        //
+        $planners = Planner::all();
+        return view('planners.index', ['planners'=> $planners ]);
     }
 
     /**
@@ -23,7 +25,7 @@ class PlannersController extends Controller
      */
     public function create()
     {
-        //
+        return view('planners.create');
     }
 
     /**
@@ -34,7 +36,17 @@ class PlannersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $planner = new Planner;
+        $planner->Name = $request->Name;
+        $planner->LastName = $request->LastName;
+        $planner->Email = $request->Email;
+        $planner->PhoneNumber = $request->PhoneNumber;
+        if($planner->save()) {
+            return redirect('/planners');
+        }
+        else {
+            return view('planners.create');
+        }
     }
 
     /**

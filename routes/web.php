@@ -15,6 +15,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/planners', 'PlannersController@index');
+Route::get('/planners/create', 'PlannersController@create');
+Route::post('/planners/create', 'PlannersController@store');
 Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
