@@ -14,8 +14,8 @@ class PlannersController extends Controller
      */
     public function index()
     {
-        $planners = Planner::all();
-        return view('planners.index', ['planners'=> $planners ]);
+        $planners = Planner::paginate(10);
+        return view('planners.index', ['planners' => $planners]);
     }
 
     /**
@@ -25,7 +25,8 @@ class PlannersController extends Controller
      */
     public function create()
     {
-        return view('planners.create');
+        $planner = new Planner();
+        return view('planners.create', ['planner' => $planner]);
     }
 
     /**
@@ -36,14 +37,16 @@ class PlannersController extends Controller
      */
     public function store(Request $request)
     {
-        $planner = new Planner;
-        $planner->Name = $request->Name;
-        $planner->LastName = $request->LastName;
-        $planner->Email = $request->Email;
-        $planner->PhoneNumber = $request->PhoneNumber;
-        if($planner->save()) {
-            return redirect('/planners');
-        }
+        $options = [
+            'Email' => $request->Email,
+            'Name' => $request->Name,
+            'LastName' => $request->LastName,
+            'PhoneNumber' => $request->PhoneNumber
+        ];
+
+        if (Planner::create($options)){
+            return $this->index();
+        } 
         else {
             return view('planners.create');
         }
@@ -68,7 +71,8 @@ class PlannersController extends Controller
      */
     public function edit($id)
     {
-        //
+        $planner = Planner::find($id);
+        return view('planners.edit', ['planner' => $planner]);
     }
 
     /**
@@ -80,7 +84,19 @@ class PlannersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $planner = Planner::find($id);
+
+        $planner->Email = $request->Email;
+        $planner->Name = $request->Name;
+        $planner->LastName = $request->LastName;
+        $planner->PhoneNumber = $request->PhoneNumber;
+
+        if ($planner->save()){
+            return $this->index();
+        } 
+        else {
+            return view('planners.edit', ['planner' => $planner]);
+        }
     }
 
     /**
@@ -91,6 +107,7 @@ class PlannersController extends Controller
      */
     public function destroy($id)
     {
-        //
+        Product::destroy($id);
+        return redirect('/productos');
     }
 }
