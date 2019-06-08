@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Planner;
+use App\Http\Resources\PlannersCollection;
 
 class PlannersController extends Controller
 {
@@ -12,9 +13,18 @@ class PlannersController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $planners = Planner::paginate(10);
+
+        if($request->wantsJson()) {
+            $data = array(
+                'fields' => ['ID', 'Name', 'Last Name', 'Email', 'PhoneNumber'], 
+                'data' => new PlannersCollection($planners)
+            );
+            return $data;
+        }
+
         return view('planners.index', ['planners' => $planners]);
     }
 
