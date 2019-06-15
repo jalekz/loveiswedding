@@ -18,6 +18,8 @@ class CreateTableEventPlanned extends Migration
             $table->string('Name');
             $table->string('HostName');
             $table->string('Date');
+            $table->date('Date')->change();
+            $table->string('Time');
             $table->timestamps();
         });
     }

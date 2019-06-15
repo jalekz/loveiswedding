@@ -12,11 +12,33 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('home');
 });
 
-Auth::routes();
+Route::group(['middleware' => ['auth']], function() {
+    // your routes
 
-Route::resource('planners', 'PlannersController');
+	Route::get('/home', 'HomeController@index')->name('home');
+	Route::resource('plannedevents', 'PlannedEventsController');
+	Route::resource('users', 'UsersController');
+	Route::resource('userroles', 'UserRolesController');
 
-Route::get('/home', 'HomeController@index')->name('home');
+	//Auth::routes();
+	// Registration Routes...
+	Route::get('register', 'Auth\RegisterController@getRegisterForm')->name('register');
+	Route::post('register', 'Auth\RegisterController@register');
+
+	// Password Reset Routes...
+	Route::get('password/reset', 'Auth\ForgotPasswordController@showLinkRequestForm')->name('password.request');
+	Route::post('password/email', 'Auth\ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+	Route::get('password/reset/{token}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset');
+	Route::post('password/reset', 'Auth\ResetPasswordController@reset');
+	Route::post('logout', 'Auth\LoginController@logout')->name('logout');
+});
+
+
+// Authentication Routes...
+Route::get('login', 'Auth\LoginController@showLoginForm')->name('login');
+Route::post('login', 'Auth\LoginController@login');
+
+

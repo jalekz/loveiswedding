@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\PlannedEvent;
-use App\Http\Resources\PlannedEventsCollection;
+use App\UserRole;
+use App\Http\Resources\UserRolesCollection;
 
-class PlannedEventsController extends Controller
+class UserRolesController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,15 +15,17 @@ class PlannedEventsController extends Controller
      */
     public function index(Request $request)
     {
-      $plannedevents = PlannedEvent::paginate(10);
-      if($request->wantsJson()) {
-          $data = array(
-              'fields' => ['ID', 'Name','HostName', 'Date', 'Time'], 
-              'data' => new PlannedEventsCollection($plannedevents)
-          );
-          return $data;
-      }
-      return view('plannedevents.index', ['plannedevents' => $plannedevents]);
+        $userroles = UserRole::paginate(10);
+
+        if($request->wantsJson()) {
+            $data = array(
+                'fields' => ['ID', 'Role'], 
+                'data' => new UserRolesCollection($userroles)
+            );
+            return $data;
+        }
+
+        return view('userroles.index', ['userroles' => $userroles]);
     }
 
     /**
@@ -33,8 +35,8 @@ class PlannedEventsController extends Controller
      */
     public function create()
     {
-        $plannedevent = new PlannedEvent();
-        return view('plannedevents.create', ['plannedevent' => $plannedevent]);
+        $userrole = new UserRole();
+        return view('userroles.create', ['userrole' => $userrole]);
     }
 
     /**
@@ -46,17 +48,14 @@ class PlannedEventsController extends Controller
     public function store(Request $request)
     {
         $options = [
-          'Name' => $request->Name,
-          'HostName' => $request->HostName,
-          'Date' => $request->Date,
-          'Time' => $request->Time
+          'Role' => $request->Role
         ];
 
-        if (PlannedEvent::create($options)){
-            return redirect('plannedevents/');
+        if (UserRole::create($options)){
+            return redirect('userroles');
         } 
         else {
-            return redirect('plannedevents/create');
+            return $this->create();
         }
     }
 

@@ -10670,3 +10670,8 @@ a.text-dark:focus {
   padding: 1em;
 }
 
+tcxspan {
+  text-decoration: underline;
+  cursor: pointer;
+}
+

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Planner;
-use App\Http\Resources\PlannersCollection;
+use App\Http\Resources\UsersCollection;
+use App\User;
 
-class PlannersController extends Controller
+class UsersController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,17 +15,17 @@ class PlannersController extends Controller
      */
     public function index(Request $request)
     {
-        $planners = Planner::paginate(10);
+        $users = User::paginate(10);
 
         if($request->wantsJson()) {
             $data = array(
-                'fields' => ['ID', 'Name', 'Last Name', 'Email', 'PhoneNumber'], 
-                'data' => new PlannersCollection($planners)
+                'fields' => ['ID', 'Name', 'Last Name', 'Email', 'Phone', 'Role'], 
+                'data' => new UsersCollection($users)
             );
             return $data;
         }
 
-        return view('planners.index', ['planners' => $planners]);
+        return view('auth.index', ['users' => $users]);
     }
 
     /**
@@ -35,8 +35,7 @@ class PlannersController extends Controller
      */
     public function create()
     {
-        $planner = new Planner();
-        return view('planners.create', ['planner' => $planner]);
+        //
     }
 
     /**
@@ -47,19 +46,7 @@ class PlannersController extends Controller
      */
     public function store(Request $request)
     {
-        $options = [
-            'Email' => $request->Email,
-            'Name' => $request->Name,
-            'LastName' => $request->LastName,
-            'PhoneNumber' => $request->PhoneNumber
-        ];
-
-        if (Planner::create($options)){
-            return $this->index();
-        } 
-        else {
-            return view('planners.create');
-        }
+        //
     }
 
     /**
@@ -81,8 +68,7 @@ class PlannersController extends Controller
      */
     public function edit($id)
     {
-        $planner = Planner::find($id);
-        return view('planners.edit', ['planner' => $planner]);
+        //
     }
 
     /**
@@ -94,19 +80,7 @@ class PlannersController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $planner = Planner::find($id);
-
-        $planner->Email = $request->Email;
-        $planner->Name = $request->Name;
-        $planner->LastName = $request->LastName;
-        $planner->PhoneNumber = $request->PhoneNumber;
-
-        if ($planner->save()){
-            return $this->index();
-        } 
-        else {
-            return view('planners.edit', ['planner' => $planner]);
-        }
+        //
     }
 
     /**
@@ -117,7 +91,6 @@ class PlannersController extends Controller
      */
     public function destroy($id)
     {
-        Product::destroy($id);
-        return redirect('/productos');
+        //
     }
 }
